@@ -3,6 +3,15 @@ import React, { useState } from 'react';
 export const Contact: React.FC = () => {
   const [btnText, setBtnText] = useState('Send Message');
   
+  const triggerMailto = (mailtoUrl: string) => {
+    // Method 1: Try creating and clicking a temporary anchor (most reliable for desktop/mobile)
+    const link = document.createElement('a');
+    link.href = mailtoUrl;
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+  };
+
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     
@@ -23,14 +32,19 @@ export const Contact: React.FC = () => {
 
     setBtnText('Opening Email...');
     
-    // Trigger the mailto link
-    window.location.href = mailtoUrl;
+    // Trigger the mailto link using the reliable method
+    triggerMailto(mailtoUrl);
 
     // Reset form UI after a brief delay
     setTimeout(() => {
       setBtnText('Send Message');
       form.reset();
-    }, 2000);
+    }, 1500);
+  };
+
+  const handleEmailClick = (e: React.MouseEvent<HTMLAnchorElement>) => {
+    e.preventDefault();
+    triggerMailto('mailto:bishnukhojwar18@gmail.com');
   };
 
   return (
@@ -53,7 +67,7 @@ export const Contact: React.FC = () => {
                 </div>
                 <div className="contact-info-text">
                   <h4>Email</h4>
-                  <a id="contact-email" href="mailto:bishnukhojwar18@gmail.com">bishnukhojwar18@gmail.com</a>
+                  <a id="contact-email" href="mailto:bishnukhojwar18@gmail.com" onClick={handleEmailClick}>bishnukhojwar18@gmail.com</a>
                 </div>
               </div>
               <div className="contact-info-item">
@@ -70,7 +84,7 @@ export const Contact: React.FC = () => {
               <a href="https://www.linkedin.com/in/bishnu-khojwar" target="_blank" rel="noopener noreferrer" className="contact-social-link">
               <img alt="LinkedIn Icon" src="linkedin.png" height="20" width="20" />
               </a>
-              <a href="mailto:bishnukhojwar18@gmail.com" className="contact-social-link">📧</a>
+              <a href="mailto:bishnukhojwar18@gmail.com" onClick={handleEmailClick} className="contact-social-link">📧</a>
               <a href="#about" className="contact-social-link">👤</a>
             </div>
           </div>
